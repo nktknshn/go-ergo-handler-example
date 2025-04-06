@@ -45,6 +45,13 @@ func (r *AdminUserRepository) UpsertAdmin(ctx context.Context, admin adminUserMo
 	return r.createAdmin(ctx, admin)
 }
 
+// CreateAdmin
+func (r *AdminUserRepository) CreateAdmin(ctx context.Context, admin adminUserModel.AdminUser) (adminUserModel.AdminUser, error) {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+	return r.createAdmin(ctx, admin)
+}
+
 func (r *AdminUserRepository) updateAdmin(_ context.Context, admin adminUserModel.AdminUser) (adminUserModel.AdminUser, error) {
 	r.admins[admin.ID] = admin
 	return admin, nil

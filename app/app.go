@@ -37,6 +37,17 @@ func (a *App) Init(ctx context.Context) error {
 	return nil
 }
 
-func (a *App) Start(ctx context.Context) error {
-	return nil
+func (a *App) AddHttpHandlers(server http_adapter.HttpHandlerAdder) {
+	server.AddHandler(a.httpAdapter.GetCreateFavoriteBookHandler())
+	server.AddHandler(a.httpAdapter.GetCreateBookHandler())
+	server.AddHandler(a.httpAdapter.GetGetBooksHandler())
+	server.AddHandler(a.httpAdapter.GetGetBookHandler())
+}
+
+func (a *App) GetRepositories() *repositories.Repositories {
+	return a.repositories
+}
+
+func (a *App) GetUseCases() *use_cases.UseCases {
+	return a.useCases
 }

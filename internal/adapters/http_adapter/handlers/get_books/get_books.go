@@ -12,7 +12,7 @@ import (
 )
 
 type authUserUseCase interface {
-	GetUser(ctx context.Context, token string) (*user.User, bool, error)
+	ValidateToken(ctx context.Context, token string) (*user.User, bool, error)
 }
 
 type getBooksUseCase interface {

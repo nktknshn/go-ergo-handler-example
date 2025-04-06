@@ -40,3 +40,19 @@ func (h *HttpAdapter) Init(ctx context.Context, uc *use_cases.UseCases) error {
 	)
 	return nil
 }
+
+func (h *HttpAdapter) GetCreateFavoriteBookHandler() *create_favorite_book.CreateFavoriteBookHandler {
+	return h.handlerCreateFavoriteBook
+}
+
+func (h *HttpAdapter) GetCreateBookHandler() *create_book.CreateBookHandler {
+	return h.handlerCreateBook
+}
+
+func (h *HttpAdapter) GetGetBooksHandler() *get_books.GetBooksHandler {
+	return h.handlerGetBooks
+}
+
+func (h *HttpAdapter) GetGetBookHandler() *get_book.GetBookHandler {
+	return h.handlerGetBook
+}

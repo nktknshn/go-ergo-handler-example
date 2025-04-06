@@ -3,7 +3,7 @@ module github.com/nktknshn/go-ergo-handler-example
 go 1.24.0
 
 require (
-	github.com/nktknshn/go-ergo-handler v0.0.1
+	github.com/nktknshn/go-ergo-handler v0.1.0
 	github.com/stretchr/testify v1.10.0
 )
 

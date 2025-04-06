@@ -13,7 +13,7 @@ type AuthUseCaseMock struct {
 	mock.Mock
 }
 
-func (m *AuthUseCaseMock) GetUser(ctx context.Context, token string) (*user.User, bool, error) {
+func (m *AuthUseCaseMock) ValidateToken(ctx context.Context, token string) (*user.User, bool, error) {
 	args := m.Called(ctx, token)
 	return args.Get(0).(*user.User), args.Bool(1), args.Error(2)
 }

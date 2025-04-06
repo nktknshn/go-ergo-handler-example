@@ -2,14 +2,17 @@ package create_favorite_book
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
+	goergohandler "github.com/nktknshn/go-ergo-handler"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handler_builder"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handlers_params"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handlers_user_auth"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book_favorite"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
+	useCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/books_favorite"
 )
 
 type bookFavoriteUseCase interface {
@@ -17,7 +20,7 @@ type bookFavoriteUseCase interface {
 }
 
 type userUseCase interface {
-	GetUser(ctx context.Context, token string) (*user.User, bool, error)
+	ValidateToken(ctx context.Context, token string) (*user.User, bool, error)
 }
 
 type CreateFavoriteBookHandler struct {
@@ -34,7 +37,7 @@ func (h *CreateFavoriteBookHandler) GetMethods() []string {
 }
 
 func (h *CreateFavoriteBookHandler) GetPath() string {
-	return "/api/v1/books/{book_id}/favorite"
+	return "/api/v1/books/{book_id:[0-9]+}/favorite"
 }
 
 func (h *CreateFavoriteBookHandler) GetHandler() http.Handler {
@@ -49,7 +52,17 @@ func makeHttpRequest(userUseCase userUseCase, createFavoriteBookUseCase bookFavo
 		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
 			bookID := paramBookID.GetRequest(r)
 			user := auth.GetUserRequest(r)
+
 			favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID)
+
+			if errors.Is(err, useCaseValObj.ErrBookNotFound) {
+				return nil, goergohandler.WrapError(err, http.StatusNotFound)
+			}
+
+			if errors.Is(err, useCaseValObj.ErrBookAlreadyInFavorite) {
+				return nil, goergohandler.WrapError(err, http.StatusConflict)
+			}
+
 			if err != nil {
 				return nil, err
 			}

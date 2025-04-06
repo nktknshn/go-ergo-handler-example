@@ -16,7 +16,7 @@ type createBookUseCase interface {
 }
 
 type adminUserUseCase interface {
-	GetUser(ctx context.Context, token string) (*admin_user.AdminUser, bool, error)
+	ValidateToken(ctx context.Context, token string) (*admin_user.AdminUser, bool, error)
 }
 
 type CreateBookHandler struct {
@@ -43,15 +43,19 @@ func (h *CreateBookHandler) GetHandler() http.Handler {
 func makeHttpHandler(adminUserUseCase adminUserUseCase, createBookUseCase createBookUseCase) http.Handler {
 	var (
 		b               = handler_builder.New()
-		payload         = payloadCreateBook.Attach(b)
 		adminUserParser = handler_admin_auth.AdminUserParser.Attach(adminUserUseCase, b)
 		_               = handler_admin_role_checker.AdminAndPublisher.Attach(adminUserParser, b)
+		payload         = payloadCreateBook.Attach(b)
 	)
 
 	var handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
 		payload := payload.GetRequest(r)
 		adminUser := adminUserParser.GetUserRequest(r)
-		return createBookUseCase.CreateBook(r.Context(), adminUser.ID, payload.ToBook())
+		resp, err := createBookUseCase.CreateBook(r.Context(), adminUser.ID, payload.ToBook())
+		if err != nil {
+			return nil, err
+		}
+		return resp, nil
 	}
 
 	return b.BuildHandlerWrapped(handlerFunc)

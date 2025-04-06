@@ -45,6 +45,13 @@ func (r *UserRepository) UpsertUser(ctx context.Context, user userModel.User) (u
 	return r.createUser(ctx, user)
 }
 
+// CreateUser
+func (r *UserRepository) CreateUser(ctx context.Context, user userModel.User) (userModel.User, error) {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+	return r.createUser(ctx, user)
+}
+
 func (r *UserRepository) updateUser(_ context.Context, user userModel.User) (userModel.User, error) {
 	r.users[user.ID] = user
 	return user, nil

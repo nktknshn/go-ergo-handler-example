@@ -23,7 +23,7 @@ func NewAuthUserUseCase(authUserRepository authUserRepository, userRepository us
 	return &AuthUserUseCase{authUserRepository, userRepository}
 }
 
-func (u *AuthUserUseCase) GetUser(ctx context.Context, token string) (*user.User, bool, error) {
+func (u *AuthUserUseCase) ValidateToken(ctx context.Context, token string) (*user.User, bool, error) {
 	userID, err := u.authUserRepository.GetUserID(ctx, token)
 	if err != nil {
 		return nil, false, err

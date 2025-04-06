@@ -43,6 +43,7 @@ func (u *UseCases) Init(ctx context.Context, repositories *repositories.Reposito
 
 	u.bookFavoriteUseCase = books_favorite.NewBooksFavoriteUseCase(
 		repositories.GetBookFavoriteRepository(),
+		repositories.GetBookRepository(),
 	)
 
 	return nil

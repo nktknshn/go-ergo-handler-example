@@ -2,8 +2,11 @@ package auth_admin
 
 import (
 	"context"
+	"errors"
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/admin_user"
+	authAdminRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/auth_admin"
+	authAdminUseCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/auth_admin"
 )
 
 type AuthAdminUseCase struct {
@@ -23,8 +26,14 @@ func NewAuthAdminUseCase(authAdminRepository authAdminRepository, adminUserRepos
 	return &AuthAdminUseCase{authAdminRepository, adminUserRepository}
 }
 
-func (u *AuthAdminUseCase) GetUser(ctx context.Context, token string) (*admin_user.AdminUser, bool, error) {
+func (u *AuthAdminUseCase) ValidateToken(ctx context.Context, token string) (*admin_user.AdminUser, bool, error) {
 	adminID, err := u.authAdminRepository.GetAdminID(ctx, token)
+	if errors.Is(err, authAdminRepoValObj.ErrTokenInvalid) {
+		return nil, false, authAdminUseCaseValObj.ErrTokenInvalid
+	}
+	if errors.Is(err, authAdminRepoValObj.ErrTokenNotFound) {
+		return nil, false, authAdminUseCaseValObj.ErrTokenInvalid
+	}
 	if err != nil {
 		return nil, false, err
 	}

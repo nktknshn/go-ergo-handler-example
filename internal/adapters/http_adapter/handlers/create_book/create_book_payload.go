@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	ErrTitleRequired       = errors.New("title is required")
-	ErrAuthorRequired      = errors.New("author is required")
-	ErrDescriptionRequired = errors.New("description is required")
+	errTitleRequired       = errors.New("title is required")
+	errAuthorRequired      = errors.New("author is required")
+	errDescriptionRequired = errors.New("description is required")
 )
 
 type payload struct {
@@ -21,13 +21,13 @@ type payload struct {
 
 func (p *payload) Validate() error {
 	if p.Title == "" {
-		return ErrTitleRequired
+		return errTitleRequired
 	}
 	if p.Author == "" {
-		return ErrAuthorRequired
+		return errAuthorRequired
 	}
 	if p.Description == "" {
-		return ErrDescriptionRequired
+		return errDescriptionRequired
 	}
 	return nil
 }

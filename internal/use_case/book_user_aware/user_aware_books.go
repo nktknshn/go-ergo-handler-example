@@ -41,6 +41,11 @@ func (u *BooksUserAwareUseCase) GetBooksList(ctx context.Context, userID user.Us
 	if err != nil {
 		return response, err
 	}
-	response.FavoriteBooks = favoriteBooks
+	response.FavoriteBooks = make([]book.BookID, 0)
+	if len(favoriteBooks) > 0 {
+		response.FavoriteBooks = favoriteBooks
+	}
+	response.Cursor = resp.Cursor
+	response.HasMore = resp.HasMore
 	return response, nil
 }
