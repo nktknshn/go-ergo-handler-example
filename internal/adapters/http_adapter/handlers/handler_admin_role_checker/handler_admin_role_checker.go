@@ -47,7 +47,7 @@ type attachedAdminRolerChecker struct {
 }
 
 func (at *attachedAdminRolerChecker) ParseRequest(ctx context.Context, w http.ResponseWriter, r *http.Request) (context.Context, error) {
-	user := at.auth.GetUser(ctx)
+	user := at.auth.GetContext(ctx)
 	err := at.cf(ctx, user)
 	if err != nil {
 		return ctx, err

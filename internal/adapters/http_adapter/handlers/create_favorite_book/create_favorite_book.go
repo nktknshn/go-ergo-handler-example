@@ -50,8 +50,8 @@ func makeHttpRequest(userUseCase userUseCase, createFavoriteBookUseCase bookFavo
 		paramBookID = handlers_params.RouterParamBookID.Attach(b)
 		auth        = handlers_user_auth.UserParser.Attach(userUseCase, b)
 		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-			bookID := paramBookID.GetRequest(r)
-			user := auth.GetUserRequest(r)
+			bookID := paramBookID.Get(r)
+			user := auth.Get(r)
 
 			favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID.ToBookID())
 

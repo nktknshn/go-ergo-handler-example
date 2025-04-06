@@ -49,8 +49,8 @@ func makeHttpHandler(adminUserUseCase adminUserUseCase, createBookUseCase create
 	)
 
 	var handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-		payload := payload.GetRequest(r)
-		adminUser := adminUserParser.GetUserRequest(r)
+		payload := payload.Get(r)
+		adminUser := adminUserParser.Get(r)
 		resp, err := createBookUseCase.CreateBook(r.Context(), adminUser.ID, payload.ToBook())
 		if err != nil {
 			return nil, err

@@ -69,9 +69,9 @@ func makeHttpHandler(
 		paramCursor = queryParamCursor.Attach(b)
 		auth        = handlers_user_auth.UserParserMaybe.Attach(authUseCase, b)
 		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-			cursor, _ := paramCursor.GetRequestMaybe(r)
+			cursor, _ := paramCursor.GetMaybe(r)
 			query := useCaseValObj.GetBooksListQuery{Cursor: cursor}
-			user, _ := auth.GetUserRequestMaybe(r)
+			user, _ := auth.GetMaybe(r)
 
 			var err error
 			var resp any
