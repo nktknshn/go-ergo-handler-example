@@ -19,7 +19,7 @@ type payload struct {
 	Description string `json:"description"`
 }
 
-func (p *payload) Validate() error {
+func (p payload) Validate() error {
 	if p.Title == "" {
 		return errTitleRequired
 	}
@@ -40,4 +40,4 @@ func (p *payload) ToBook() book.Book {
 	}
 }
 
-var payloadCreateBook = builder.NewPayloadWithValidation(&payload{})
+var payloadCreateBook = builder.Payload[payload]()

@@ -7,12 +7,27 @@ GET http://localhost:8080/api/v1/books?cursor=10
 ### 
 # will return error because of invalid cursor
 GET http://localhost:8080/api/v1/books?cursor=abc
+###
+
+GET http://localhost:8080/api/v1/books/0
 
 ###
 
 GET http://localhost:8080/api/v1/books/1
 
 ### 
+
+# will fail because of the missing required field
+POST http://localhost:8080/api/v1/books
+Content-Type: application/json
+Authorization: Bearer admin_token_12345
+
+{
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald"
+}
+
+###
 
 # will fail because of json parsing error
 POST http://localhost:8080/api/v1/books

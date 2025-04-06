@@ -42,7 +42,7 @@ func makeHttpHandler(getBookUseCase getBookUseCase) http.Handler {
 		paramBookID = handlers_params.RouterParamBookID.Attach(b)
 		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
 			bookID := paramBookID.GetRequest(r)
-			book, err := getBookUseCase.GetBookByID(r.Context(), bookID)
+			book, err := getBookUseCase.GetBookByID(r.Context(), bookID.ToBookID())
 			if errors.Is(err, useCaseValObj.ErrBookNotFound) {
 				return nil, geh.NewError(http.StatusNotFound, err)
 			}

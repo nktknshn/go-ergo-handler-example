@@ -26,6 +26,6 @@ var tokenParserFunc = func(ctx context.Context, r *http.Request) (string, bool, 
 }
 
 var (
-	UserParser      = geh.NewAuthParser[user.User](userKey, tokenParserFunc)
-	UserParserMaybe = geh.NewAuthParserMaybe[user.User](userKey, tokenParserFunc)
+	UserParser      = geh.AuthParser[user.User](userKey, tokenParserFunc)
+	UserParserMaybe = geh.AuthParserMaybe[user.User](userKey, tokenParserFunc)
 )

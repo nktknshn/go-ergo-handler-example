@@ -13,7 +13,7 @@ var (
 	errParamCursorEmpty = errors.New("param cursor is empty")
 )
 
-var queryParamCursor = geh.NewQueryParamMaybe(paramNameCursor, func(ctx context.Context, v string) (bookRepoValObj.BookListCursor, error) {
+var queryParamCursor = geh.QueryParamMaybe(paramNameCursor, func(ctx context.Context, v string) (bookRepoValObj.BookListCursor, error) {
 	if v == "" {
 		return "", errParamCursorEmpty
 	}

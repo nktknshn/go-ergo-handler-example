@@ -53,7 +53,7 @@ func makeHttpRequest(userUseCase userUseCase, createFavoriteBookUseCase bookFavo
 			bookID := paramBookID.GetRequest(r)
 			user := auth.GetUserRequest(r)
 
-			favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID)
+			favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID.ToBookID())
 
 			if errors.Is(err, useCaseValObj.ErrBookNotFound) {
 				return nil, goergohandler.WrapError(err, http.StatusNotFound)
