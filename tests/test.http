@@ -1,11 +1,20 @@
 GET http://localhost:8080/api/v1/books
 
+### 
+# will return second page
+GET http://localhost:8080/api/v1/books?cursor=10
+
+### 
+# will return error because of invalid cursor
+GET http://localhost:8080/api/v1/books?cursor=abc
+
 ###
 
 GET http://localhost:8080/api/v1/books/1
 
 ### 
 
+# will fail because of json parsing error
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
 Authorization: Bearer admin_token_12345
@@ -17,6 +26,20 @@ Authorization: Bearer admin_token_12345
 
 ###
 
+# will create a new book
+POST http://localhost:8080/api/v1/books
+Content-Type: application/json
+Authorization: Bearer admin_token_12345
+
+{
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "description": "A novel about the American Dream"
+}
+
+###
+
+# will fail with 403 status code because of moderator role
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
 Authorization: Bearer moderator_token_12345
@@ -29,11 +52,13 @@ Authorization: Bearer moderator_token_12345
 
 ###
 
+# will fail with 409 when called second time
 POST http://localhost:8080/api/v1/books/2/favorite
 Content-Type: application/json
 Authorization: Bearer user_token_12345
 
 ###
 
+# will return favorite books along with books list
 GET http://localhost:8080/api/v1/books
 Authorization: Bearer user_token_12345

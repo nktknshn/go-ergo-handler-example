@@ -2,8 +2,10 @@ package get_books
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
+	goergohandler "github.com/nktknshn/go-ergo-handler"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handler_builder"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handlers_user_auth"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
@@ -70,10 +72,25 @@ func makeHttpHandler(
 			cursor, _ := paramCursor.GetRequestMaybe(r)
 			query := useCaseValObj.GetBooksListQuery{Cursor: cursor}
 			user, _ := auth.GetUserRequestMaybe(r)
+
+			var err error
+			var resp any
+
 			if user == nil {
-				return getBooksUseCase.GetBooksList(r.Context(), query)
+				resp, err = getBooksUseCase.GetBooksList(r.Context(), query)
+			} else {
+				resp, err = userAwareGetBooksUseCase.GetBooksList(r.Context(), user.ID, query)
 			}
-			return userAwareGetBooksUseCase.GetBooksList(r.Context(), user.ID, query)
+
+			if errors.Is(err, useCaseValObj.ErrInvalidCursor) {
+				return nil, goergohandler.WrapError(err, http.StatusBadRequest)
+			}
+
+			if err != nil {
+				return nil, err
+			}
+
+			return resp, nil
 		}
 	)
 

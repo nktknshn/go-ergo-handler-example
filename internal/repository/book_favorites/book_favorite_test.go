@@ -1,4 +1,4 @@
-package book_favorite
+package book_favorites
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
-	"github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books_favorite"
+	"github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/book_favorites"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,7 +34,7 @@ func TestBookFavoriteRepository_AddFavoriteBook_AlreadyExists(t *testing.T) {
 
 	favorite, err = repo.AddFavoriteBook(context.Background(), userID1, bookID1)
 	require.Error(t, err)
-	require.ErrorIs(t, err, books_favorite.ErrBookAlreadyInFavorites)
+	require.ErrorIs(t, err, book_favorites.ErrBookAlreadyInFavorites)
 }
 
 func TestBookFavoriteRepository_GetFavoriteBooks(t *testing.T) {

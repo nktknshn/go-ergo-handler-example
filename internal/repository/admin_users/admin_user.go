@@ -1,11 +1,11 @@
-package admin_user
+package admin_users
 
 import (
 	"context"
 	"sync"
 
 	adminUserModel "github.com/nktknshn/go-ergo-handler-example/internal/model/admin_user"
-	adminUserValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/admin_user"
+	adminUserValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/admin_users"
 )
 
 type AdminUserRepository struct {

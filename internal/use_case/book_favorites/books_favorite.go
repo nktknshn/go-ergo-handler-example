@@ -1,4 +1,4 @@
-package books_favorite
+package book_favorites
 
 import (
 	"context"
@@ -7,12 +7,12 @@ import (
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book_favorite"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
+	bookFavoriteRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/book_favorites"
 	bookRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books"
-	bookFavoriteRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books_favorite"
-	booksFavoriteUseCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/books_favorite"
+	booksFavoriteUseCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/book_favorites"
 )
 
-type BooksFavoriteUseCase struct {
+type BookFavoritesUseCase struct {
 	bookFavoriteRepository bookFavoriteRepository
 	bookRepository         bookRepository
 }
@@ -27,14 +27,14 @@ type bookRepository interface {
 	GetBookByID(ctx context.Context, bookID book.BookID) (book.Book, error)
 }
 
-func NewBooksFavoriteUseCase(bookFavoriteRepository bookFavoriteRepository, bookRepository bookRepository) *BooksFavoriteUseCase {
-	return &BooksFavoriteUseCase{
+func NewBooksFavoriteUseCase(bookFavoriteRepository bookFavoriteRepository, bookRepository bookRepository) *BookFavoritesUseCase {
+	return &BookFavoritesUseCase{
 		bookFavoriteRepository,
 		bookRepository,
 	}
 }
 
-func (u *BooksFavoriteUseCase) AddFavoriteBook(ctx context.Context, userID user.UserID, bookID book.BookID) (book_favorite.BookFavorite, error) {
+func (u *BookFavoritesUseCase) AddFavoriteBook(ctx context.Context, userID user.UserID, bookID book.BookID) (book_favorite.BookFavorite, error) {
 
 	_, err := u.bookRepository.GetBookByID(ctx, bookID)
 
@@ -46,19 +46,23 @@ func (u *BooksFavoriteUseCase) AddFavoriteBook(ctx context.Context, userID user.
 		return book_favorite.BookFavorite{}, err
 	}
 
-	_, err = u.bookFavoriteRepository.AddFavoriteBook(ctx, userID, bookID)
+	favorite, err := u.bookFavoriteRepository.AddFavoriteBook(ctx, userID, bookID)
 
 	if errors.Is(err, bookFavoriteRepoValObj.ErrBookAlreadyInFavorites) {
 		return book_favorite.BookFavorite{}, booksFavoriteUseCaseValObj.ErrBookAlreadyInFavorite
 	}
 
-	return u.bookFavoriteRepository.AddFavoriteBook(ctx, userID, bookID)
+	if err != nil {
+		return book_favorite.BookFavorite{}, err
+	}
+
+	return favorite, nil
 }
 
-func (u *BooksFavoriteUseCase) RemoveFavoriteBook(ctx context.Context, userID user.UserID, bookID book.BookID) error {
+func (u *BookFavoritesUseCase) RemoveFavoriteBook(ctx context.Context, userID user.UserID, bookID book.BookID) error {
 	return u.bookFavoriteRepository.RemoveFavoriteBook(ctx, userID, bookID)
 }
 
-func (u *BooksFavoriteUseCase) GetFavoriteBooks(ctx context.Context, userID user.UserID) ([]book.BookID, error) {
+func (u *BookFavoritesUseCase) GetFavoriteBooks(ctx context.Context, userID user.UserID) ([]book.BookID, error) {
 	return u.bookFavoriteRepository.GetFavoriteBooks(ctx, userID)
 }

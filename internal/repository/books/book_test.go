@@ -1,4 +1,4 @@
-package book
+package books
 
 import "github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 

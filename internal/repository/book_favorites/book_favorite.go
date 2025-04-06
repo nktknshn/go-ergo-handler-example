@@ -1,4 +1,4 @@
-package book_favorite
+package book_favorites
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book_favorite"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
-	"github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books_favorite"
+	"github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/book_favorites"
 	"github.com/nktknshn/go-ergo-handler-example/libs/set"
 )
 
@@ -55,7 +55,7 @@ func (r *BookFavoriteRepository) addFavoriteBook(ctx context.Context, userID use
 		r.booksByUserID[userID] = userBooks
 	}
 	if userBooks.HasBook(bookID) {
-		return book_favorite.BookFavorite{}, books_favorite.ErrBookAlreadyInFavorites
+		return book_favorite.BookFavorite{}, book_favorites.ErrBookAlreadyInFavorites
 	}
 	favoriteID := r.makeNewFavoriteID()
 	favorite := book_favorite.BookFavorite{
@@ -76,10 +76,10 @@ func (r *BookFavoriteRepository) RemoveFavoriteBook(ctx context.Context, userID 
 func (r *BookFavoriteRepository) removeFavoriteBook(ctx context.Context, userID user.UserID, bookID book.BookID) error {
 	userBooks := r.booksByUserID[userID]
 	if userBooks == nil {
-		return books_favorite.ErrBookNotFoundInFavorites
+		return book_favorites.ErrBookNotFoundInFavorites
 	}
 	if !userBooks.HasBook(bookID) {
-		return books_favorite.ErrBookNotFoundInFavorites
+		return book_favorites.ErrBookNotFoundInFavorites
 	}
 	userBooks.RemoveBook(bookID)
 	return nil

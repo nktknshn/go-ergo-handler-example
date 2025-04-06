@@ -3,20 +3,20 @@ package repositories
 import (
 	"context"
 
-	"github.com/nktknshn/go-ergo-handler-example/internal/repository/admin_user"
+	"github.com/nktknshn/go-ergo-handler-example/internal/repository/admin_users"
 	"github.com/nktknshn/go-ergo-handler-example/internal/repository/auth_admin"
 	"github.com/nktknshn/go-ergo-handler-example/internal/repository/auth_user"
-	"github.com/nktknshn/go-ergo-handler-example/internal/repository/book"
-	"github.com/nktknshn/go-ergo-handler-example/internal/repository/book_favorite"
-	"github.com/nktknshn/go-ergo-handler-example/internal/repository/user"
+	"github.com/nktknshn/go-ergo-handler-example/internal/repository/book_favorites"
+	"github.com/nktknshn/go-ergo-handler-example/internal/repository/books"
+	"github.com/nktknshn/go-ergo-handler-example/internal/repository/users"
 )
 
 type Repositories struct {
-	bookRepository         *book.BookRepository
-	bookFavoriteRepository *book_favorite.BookFavoriteRepository
+	bookRepository         *books.BookRepository
+	bookFavoriteRepository *book_favorites.BookFavoriteRepository
 	authUserRepository     *auth_user.AuthUserRepository
-	userRepository         *user.UserRepository
-	adminUserRepository    *admin_user.AdminUserRepository
+	userRepository         *users.UserRepository
+	adminUserRepository    *admin_users.AdminUserRepository
 	authAdminRepository    *auth_admin.AuthAdminRepository
 }
 
@@ -25,20 +25,20 @@ func New() *Repositories {
 }
 
 func (r *Repositories) Init(ctx context.Context) error {
-	r.bookRepository = book.NewBookRepostiory()
-	r.bookFavoriteRepository = book_favorite.NewBookFavoriteRepository()
+	r.bookRepository = books.NewBookRepostiory()
+	r.bookFavoriteRepository = book_favorites.NewBookFavoriteRepository()
 	r.authUserRepository = auth_user.NewAuthUserRepository()
-	r.userRepository = user.NewUserRepository()
-	r.adminUserRepository = admin_user.NewAdminUserRepository()
+	r.userRepository = users.NewUserRepository()
+	r.adminUserRepository = admin_users.NewAdminUserRepository()
 	r.authAdminRepository = auth_admin.NewAuthAdminRepository()
 	return nil
 }
 
-func (r *Repositories) GetBookRepository() *book.BookRepository {
+func (r *Repositories) GetBookRepository() *books.BookRepository {
 	return r.bookRepository
 }
 
-func (r *Repositories) GetBookFavoriteRepository() *book_favorite.BookFavoriteRepository {
+func (r *Repositories) GetBookFavoriteRepository() *book_favorites.BookFavoriteRepository {
 	return r.bookFavoriteRepository
 }
 
@@ -46,11 +46,11 @@ func (r *Repositories) GetAuthUserRepository() *auth_user.AuthUserRepository {
 	return r.authUserRepository
 }
 
-func (r *Repositories) GetUserRepository() *user.UserRepository {
+func (r *Repositories) GetUserRepository() *users.UserRepository {
 	return r.userRepository
 }
 
-func (r *Repositories) GetAdminUserRepository() *admin_user.AdminUserRepository {
+func (r *Repositories) GetAdminUserRepository() *admin_users.AdminUserRepository {
 	return r.adminUserRepository
 }
 

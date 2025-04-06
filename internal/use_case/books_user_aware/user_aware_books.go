@@ -1,4 +1,4 @@
-package book_user_aware
+package books_user_aware
 
 import (
 	"context"

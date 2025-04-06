@@ -2,6 +2,7 @@ package books
 
 import (
 	"context"
+	"errors"
 
 	bookRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books"
 	useCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/books"
@@ -14,6 +15,9 @@ var (
 func (u *BooksUseCase) GetBooksList(ctx context.Context, query useCaseValObj.GetBooksListQuery) (useCaseValObj.GetBooksListResponse, error) {
 	response := useCaseValObj.GetBooksListResponse{}
 	bookList, err := u.booksRepository.GetBooksList(ctx, query.Cursor, defaultBookListLimit)
+	if errors.Is(err, bookRepoValObj.ErrBookListCursorInvalid) {
+		return useCaseValObj.GetBooksListResponse{}, useCaseValObj.ErrInvalidCursor
+	}
 	if err != nil {
 		return useCaseValObj.GetBooksListResponse{}, err
 	}

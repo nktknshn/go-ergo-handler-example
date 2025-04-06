@@ -1,4 +1,4 @@
-package book_favorite
+package book_favorites
 
 import (
 	"slices"

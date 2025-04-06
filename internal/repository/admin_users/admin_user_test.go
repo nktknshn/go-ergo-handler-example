@@ -1,4 +1,4 @@
-package admin_user
+package admin_users
 
 import (
 	"context"

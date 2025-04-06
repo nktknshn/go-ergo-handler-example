@@ -12,7 +12,7 @@ import (
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book_favorite"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
-	useCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/books_favorite"
+	useCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/book_favorites"
 )
 
 type bookFavoriteUseCase interface {

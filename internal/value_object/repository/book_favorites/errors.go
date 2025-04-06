@@ -1,4 +1,4 @@
-package books_favorite
+package book_favorites
 
 import "errors"
 
