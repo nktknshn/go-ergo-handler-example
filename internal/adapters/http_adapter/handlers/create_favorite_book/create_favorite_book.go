@@ -46,29 +46,28 @@ func (h *CreateFavoriteBookHandler) GetHandler() http.Handler {
 
 func makeHttpRequest(userUseCase userUseCase, createFavoriteBookUseCase bookFavoriteUseCase) http.Handler {
 	var (
-		b           = handler_builder.New()
-		paramBookID = handlers_params.RouterParamBookID.Attach(b)
-		auth        = handlers_user_auth.UserParser.Attach(userUseCase, b)
-		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-			bookID := paramBookID.Get(r)
-			user := auth.Get(r)
-
-			favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID.ToBookID())
-
-			if errors.Is(err, useCaseValObj.ErrBookNotFound) {
-				return nil, goergohandler.WrapError(err, http.StatusNotFound)
-			}
-
-			if errors.Is(err, useCaseValObj.ErrBookAlreadyInFavorite) {
-				return nil, goergohandler.WrapError(err, http.StatusConflict)
-			}
-
-			if err != nil {
-				return nil, err
-			}
-			return favorite, nil
-		}
+		builder     = handler_builder.New()
+		paramBookID = handlers_params.RouterParamBookID.Attach(builder)
+		auth        = handlers_user_auth.User.Attach(userUseCase, builder)
 	)
 
-	return b.BuildHandlerWrapped(handlerFunc)
+	return builder.BuildHandlerWrapped(func(h http.ResponseWriter, r *http.Request) (any, error) {
+		bookID := paramBookID.Get(r)
+		user := auth.Get(r)
+
+		favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID.ToBookID())
+
+		if errors.Is(err, useCaseValObj.ErrBookNotFound) {
+			return nil, goergohandler.WrapError(err, http.StatusNotFound)
+		}
+
+		if errors.Is(err, useCaseValObj.ErrBookAlreadyInFavorite) {
+			return nil, goergohandler.WrapError(err, http.StatusConflict)
+		}
+
+		if err != nil {
+			return nil, err
+		}
+		return favorite, nil
+	})
 }

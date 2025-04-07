@@ -65,34 +65,33 @@ func makeHttpHandler(
 	userAwareGetBooksUseCase userAwareGetBooksUseCase,
 ) http.Handler {
 	var (
-		b           = handler_builder.New()
-		paramCursor = queryParamCursor.Attach(b)
-		auth        = handlers_user_auth.UserParserMaybe.Attach(authUseCase, b)
-		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-			cursor, _ := paramCursor.GetMaybe(r)
-			query := useCaseValObj.GetBooksListQuery{Cursor: cursor}
-			user, _ := auth.GetMaybe(r)
-
-			var err error
-			var resp any
-
-			if user == nil {
-				resp, err = getBooksUseCase.GetBooksList(r.Context(), query)
-			} else {
-				resp, err = userAwareGetBooksUseCase.GetBooksList(r.Context(), user.ID, query)
-			}
-
-			if errors.Is(err, useCaseValObj.ErrInvalidCursor) {
-				return nil, goergohandler.WrapError(err, http.StatusBadRequest)
-			}
-
-			if err != nil {
-				return nil, err
-			}
-
-			return resp, nil
-		}
+		builder     = handler_builder.New()
+		paramCursor = queryParamCursor.Attach(builder)
+		auth        = handlers_user_auth.UserMaybe.Attach(authUseCase, builder)
 	)
 
-	return b.BuildHandlerWrapped(handlerFunc)
+	return builder.BuildHandlerWrapped(func(h http.ResponseWriter, r *http.Request) (any, error) {
+		user, _ := auth.GetMaybe(r)
+		cursor, _ := paramCursor.GetMaybe(r)
+		query := useCaseValObj.GetBooksListQuery{Cursor: cursor}
+
+		var err error
+		var resp any
+
+		if user == nil {
+			resp, err = getBooksUseCase.GetBooksList(r.Context(), query)
+		} else {
+			resp, err = userAwareGetBooksUseCase.GetBooksList(r.Context(), user.ID, query)
+		}
+
+		if errors.Is(err, useCaseValObj.ErrInvalidCursor) {
+			return nil, goergohandler.WrapError(err, http.StatusBadRequest)
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		return resp, nil
+	})
 }

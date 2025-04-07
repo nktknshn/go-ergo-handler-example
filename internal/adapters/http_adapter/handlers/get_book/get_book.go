@@ -38,20 +38,22 @@ func (h *GetBookHandler) GetHandler() http.Handler {
 
 func makeHttpHandler(getBookUseCase getBookUseCase) http.Handler {
 	var (
-		b           = handler_builder.New()
-		paramBookID = handlers_params.RouterParamBookID.Attach(b)
-		handlerFunc = func(h http.ResponseWriter, r *http.Request) (any, error) {
-			bookID := paramBookID.Get(r)
-			book, err := getBookUseCase.GetBookByID(r.Context(), bookID.ToBookID())
-			if errors.Is(err, useCaseValObj.ErrBookNotFound) {
-				return nil, geh.NewError(http.StatusNotFound, err)
-			}
-			if err != nil {
-				return nil, err
-			}
-			return book, nil
-		}
+		builder     = handler_builder.New()
+		paramBookID = handlers_params.RouterParamBookID.Attach(builder)
 	)
 
-	return b.BuildHandlerWrapped(handlerFunc)
+	return builder.BuildHandlerWrapped(func(h http.ResponseWriter, r *http.Request) (any, error) {
+		bookID := paramBookID.Get(r)
+		book, err := getBookUseCase.GetBookByID(r.Context(), bookID.ToBookID())
+
+		if errors.Is(err, useCaseValObj.ErrBookNotFound) {
+			return nil, geh.NewError(http.StatusNotFound, err)
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		return book, nil
+	})
 }
