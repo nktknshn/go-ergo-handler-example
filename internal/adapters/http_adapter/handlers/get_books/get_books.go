@@ -85,7 +85,7 @@ func makeHttpHandler(
 		}
 
 		if errors.Is(err, useCaseValObj.ErrInvalidCursor) {
-			return nil, goergohandler.WrapError(err, http.StatusBadRequest)
+			return nil, goergohandler.WrapWithStatusCode(err, http.StatusBadRequest)
 		}
 
 		if err != nil {

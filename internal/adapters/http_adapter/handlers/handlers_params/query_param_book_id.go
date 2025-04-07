@@ -6,5 +6,6 @@ import (
 
 var (
 	QueryParamBookIDMaybe = geh.QueryParamWithParserMaybe[paramBookIDType](paramNameBookID)
-	QueryParamBookID      = geh.QueryParamWithParser[paramBookIDType](paramNameBookID, errParamBookIDMissing)
+	QueryParamBookID      = geh.QueryParamWithParser[paramBookIDType](paramNameBookID).
+				WithErrMissing(errParamBookIDMissing)
 )

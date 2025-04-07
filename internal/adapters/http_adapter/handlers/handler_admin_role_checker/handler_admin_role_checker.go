@@ -35,7 +35,7 @@ func NewAdminRoleChecker(cf CheckFunc) *AdminRolerChecker {
 	return &AdminRolerChecker{cf}
 }
 
-func (a *AdminRolerChecker) Attach(auth *handler_admin_auth.AttachedAdminUserParser, builder geh.HandlerBuilder) *attachedAdminRolerChecker {
+func (a *AdminRolerChecker) Attach(auth *handler_admin_auth.AttachedAdminUserParser, builder geh.ParserAdder) *attachedAdminRolerChecker {
 	attached := &attachedAdminRolerChecker{a.cf, auth}
 	builder.AddParser(attached)
 	return attached

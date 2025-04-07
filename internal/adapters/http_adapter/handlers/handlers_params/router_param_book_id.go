@@ -42,4 +42,4 @@ func (p paramBookIDType) ToBookID() book.BookID {
 	return book.BookID(p)
 }
 
-var RouterParamBookID = geh.RouterParamWithParser[paramBookIDType](paramNameBookID, errParamBookIDMissing)
+var RouterParamBookID = geh.RouterParamWithParser[paramBookIDType](paramNameBookID).WithErrMissing(errParamBookIDMissing)

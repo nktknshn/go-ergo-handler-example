@@ -3,6 +3,7 @@ package books
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	bookModel "github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	bookRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books"
@@ -17,7 +18,8 @@ func (u *BooksUseCase) GetBookByID(ctx context.Context, bookID bookModel.BookID)
 	}
 
 	if err != nil {
-		return bookModel.Book{}, err
+		slog.Error("u.booksRepository.GetBookByID", "error", err)
+		return bookModel.Book{}, useCaseValObj.ErrGetBookFailed
 	}
 
 	return book, nil

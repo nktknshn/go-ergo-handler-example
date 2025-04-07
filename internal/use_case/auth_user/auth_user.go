@@ -2,8 +2,10 @@ package auth_user
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
+	authUserUseCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/auth_user"
 )
 
 type AuthUserUseCase struct {
@@ -26,11 +28,13 @@ func NewAuthUserUseCase(authUserRepository authUserRepository, userRepository us
 func (u *AuthUserUseCase) ValidateToken(ctx context.Context, token string) (*user.User, bool, error) {
 	userID, err := u.authUserRepository.GetUserID(ctx, token)
 	if err != nil {
-		return nil, false, err
+		slog.Error("u.authUserRepository.GetUserID", "error", err)
+		return nil, false, authUserUseCaseValObj.ErrGetUserIDFailed
 	}
 	user, err := u.userRepository.GetUserByID(ctx, userID)
 	if err != nil {
-		return nil, false, err
+		slog.Error("u.userRepository.GetUserByID", "error", err)
+		return nil, false, authUserUseCaseValObj.ErrGetUserFailed
 	}
 	return &user, true, nil
 }

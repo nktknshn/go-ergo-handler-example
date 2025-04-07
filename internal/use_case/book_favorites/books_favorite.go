@@ -3,6 +3,7 @@ package book_favorites
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book_favorite"
@@ -43,7 +44,8 @@ func (u *BookFavoritesUseCase) AddFavoriteBook(ctx context.Context, userID user.
 	}
 
 	if err != nil {
-		return book_favorite.BookFavorite{}, err
+		slog.Error("u.bookRepository.GetBookByID", "error", err)
+		return book_favorite.BookFavorite{}, booksFavoriteUseCaseValObj.ErrGetBookFavoritesFailed
 	}
 
 	favorite, err := u.bookFavoriteRepository.AddFavoriteBook(ctx, userID, bookID)
@@ -53,7 +55,8 @@ func (u *BookFavoritesUseCase) AddFavoriteBook(ctx context.Context, userID user.
 	}
 
 	if err != nil {
-		return book_favorite.BookFavorite{}, err
+		slog.Error("u.bookFavoriteRepository.AddFavoriteBook", "error", err)
+		return book_favorite.BookFavorite{}, booksFavoriteUseCaseValObj.ErrAddBookToFavoritesFailed
 	}
 
 	return favorite, nil

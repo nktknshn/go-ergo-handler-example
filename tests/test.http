@@ -9,6 +9,7 @@ GET http://localhost:8080/api/v1/books?cursor=10
 GET http://localhost:8080/api/v1/books?cursor=abc
 ###
 
+# will return error because of invalid book id
 GET http://localhost:8080/api/v1/books/0
 
 ###
@@ -16,7 +17,6 @@ GET http://localhost:8080/api/v1/books/0
 GET http://localhost:8080/api/v1/books/1
 
 ### 
-
 # will fail because of the missing required field
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
@@ -28,7 +28,6 @@ Authorization: Bearer admin_token_12345
 }
 
 ###
-
 # will fail because of json parsing error
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
@@ -40,7 +39,6 @@ Authorization: Bearer admin_token_12345
 }
 
 ###
-
 # will create a new book
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
@@ -53,7 +51,6 @@ Authorization: Bearer admin_token_12345
 }
 
 ###
-
 # will fail with 403 status code because of moderator role
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
@@ -66,14 +63,12 @@ Authorization: Bearer moderator_token_12345
 }
 
 ###
-
 # will fail with 409 when called second time
 POST http://localhost:8080/api/v1/books/2/favorite
 Content-Type: application/json
 Authorization: Bearer user_token_12345
 
 ###
-
 # will return favorite books along with books list
 GET http://localhost:8080/api/v1/books
 Authorization: Bearer user_token_12345

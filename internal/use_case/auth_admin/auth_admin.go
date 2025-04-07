@@ -3,6 +3,7 @@ package auth_admin
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/admin_user"
 	authAdminRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/auth_admin"
@@ -35,11 +36,13 @@ func (u *AuthAdminUseCase) ValidateToken(ctx context.Context, token string) (*ad
 		return nil, false, authAdminUseCaseValObj.ErrTokenInvalid
 	}
 	if err != nil {
-		return nil, false, err
+		slog.Error("u.authAdminRepository.GetAdminID", "error", err)
+		return nil, false, authAdminUseCaseValObj.ErrGetAdminIDFailed
 	}
 	admin, err := u.adminUserRepository.GetAdminByID(ctx, adminID)
 	if err != nil {
-		return nil, false, err
+		slog.Error("u.adminUserRepository.GetAdminByID", "error", err)
+		return nil, false, authAdminUseCaseValObj.ErrGetAdminFailed
 	}
 	return &admin, true, nil
 }

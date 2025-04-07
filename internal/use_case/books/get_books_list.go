@@ -3,6 +3,7 @@ package books
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	bookRepoValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/repository/books"
 	useCaseValObj "github.com/nktknshn/go-ergo-handler-example/internal/value_object/use_case/books"
@@ -19,7 +20,8 @@ func (u *BooksUseCase) GetBooksList(ctx context.Context, query useCaseValObj.Get
 		return useCaseValObj.GetBooksListResponse{}, useCaseValObj.ErrInvalidCursor
 	}
 	if err != nil {
-		return useCaseValObj.GetBooksListResponse{}, err
+		slog.Error("u.booksRepository.GetBooksList", "error", err)
+		return useCaseValObj.GetBooksListResponse{}, useCaseValObj.ErrGetBookListFailed
 	}
 	response.Books = make([]useCaseValObj.Book, len(bookList.Books))
 	for i, book := range bookList.Books {

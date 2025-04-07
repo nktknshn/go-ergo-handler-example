@@ -58,11 +58,11 @@ func makeHttpRequest(userUseCase userUseCase, createFavoriteBookUseCase bookFavo
 		favorite, err := createFavoriteBookUseCase.AddFavoriteBook(r.Context(), user.ID, bookID.ToBookID())
 
 		if errors.Is(err, useCaseValObj.ErrBookNotFound) {
-			return nil, goergohandler.WrapError(err, http.StatusNotFound)
+			return nil, goergohandler.WrapWithStatusCode(err, http.StatusNotFound)
 		}
 
 		if errors.Is(err, useCaseValObj.ErrBookAlreadyInFavorite) {
-			return nil, goergohandler.WrapError(err, http.StatusConflict)
+			return nil, goergohandler.WrapWithStatusCode(err, http.StatusConflict)
 		}
 
 		if err != nil {

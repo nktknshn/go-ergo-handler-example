@@ -2,6 +2,7 @@ package books_user_aware
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/book"
 	"github.com/nktknshn/go-ergo-handler-example/internal/model/user"
@@ -34,12 +35,14 @@ func (u *BooksUserAwareUseCase) GetBooksList(ctx context.Context, userID user.Us
 	response := awaredUseCaseValObj.GetBooksListResponse{}
 	resp, err := u.booksUseCase.GetBooksList(ctx, query)
 	if err != nil {
-		return response, err
+		slog.Error("u.booksUseCase.GetBooksList", "error", err)
+		return response, useCaseValObj.ErrGetBookListFailed
 	}
 	response.Books = resp.Books
 	favoriteBooks, err := u.favoriteBooksRepository.GetFavoriteBooks(ctx, userID)
 	if err != nil {
-		return response, err
+		slog.Error("u.favoriteBooksRepository.GetFavoriteBooks", "error", err)
+		return response, useCaseValObj.ErrGetBookListFailed
 	}
 	response.FavoriteBooks = make([]book.BookID, 0)
 	if len(favoriteBooks) > 0 {
