@@ -25,6 +25,6 @@ var tokenParserFunc = func(ctx context.Context, r *http.Request) (string, bool, 
 	return token, true, nil
 }
 
-var AdminUserParser = geh.AuthParser[admin_user.AdminUser, adminUserKeyType](adminUserKey, tokenParserFunc)
+var AdminUserParser = geh.AuthParser[admin_user.AdminUser](adminUserKey, tokenParserFunc)
 
 type AttachedAdminUserParser = geh.AttachedAuthParser[admin_user.AdminUser, adminUserKeyType]

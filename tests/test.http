@@ -39,6 +39,29 @@ Authorization: Bearer admin_token_12345
 }
 
 ###
+# will fail with 401 status code because of missing authorization header
+POST http://localhost:8080/api/v1/books
+Content-Type: application/json
+
+{
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "description": "A novel about the American Dream"
+}
+
+###
+# will fail with 401 status code because of missing authorization header
+POST http://localhost:8080/api/v1/books
+Content-Type: application/json
+Authorization: Bearer invalid_token
+
+{
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "description": "A novel about the American Dream"
+}
+
+###
 # will create a new book
 POST http://localhost:8080/api/v1/books
 Content-Type: application/json
