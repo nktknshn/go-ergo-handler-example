@@ -1,12 +1,30 @@
 package admin_user
 
-type AdminUserRole string
+import "fmt"
 
-const (
-	AdminUserRoleAdmin     AdminUserRole = "admin"
-	AdminUserRoleModerator AdminUserRole = "moderator"
-	AdminUserRolePublisher AdminUserRole = "publisher"
+type AdminUserRole struct {
+	role string
+}
+
+var (
+	AdminUserRoleUnknown   = AdminUserRole{}
+	AdminUserRoleAdmin     = AdminUserRole{role: "admin"}
+	AdminUserRoleModerator = AdminUserRole{role: "moderator"}
+	AdminUserRolePublisher = AdminUserRole{role: "publisher"}
 )
+
+func AdminRoleFromString(role string) (AdminUserRole, error) {
+	switch role {
+	case "admin":
+		return AdminUserRoleAdmin, nil
+	case "moderator":
+		return AdminUserRoleModerator, nil
+	case "publisher":
+		return AdminUserRolePublisher, nil
+	default:
+		return AdminUserRoleUnknown, fmt.Errorf("invalid admin role: %s", role)
+	}
+}
 
 func (r AdminUserRole) IsValid() bool {
 	switch r {
@@ -18,5 +36,5 @@ func (r AdminUserRole) IsValid() bool {
 }
 
 func (r AdminUserRole) String() string {
-	return string(r)
+	return r.role
 }
