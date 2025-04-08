@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	geh "github.com/nktknshn/go-ergo-handler"
 	"github.com/nktknshn/go-ergo-handler-example/internal/adapters/http_adapter/handlers/handler_builder"
@@ -42,16 +41,24 @@ func makeHttpHandler(getBookUseCase getBookUseCase) http.Handler {
 	var (
 		builder     = handler_builder.New()
 		paramBookID = handlers_params.RouterParamBookID.Attach(builder)
-		paramFail   = geh.QueryParamMaybe("fail", geh.IgnoreContext(strconv.ParseBool)).Attach(builder)
+		paramFail   = geh.QueryParamIntMaybe("fail").Attach(builder)
 	)
 
 	return builder.BuildHandlerWrapped(func(h http.ResponseWriter, r *http.Request) (any, error) {
 		bookID := paramBookID.Get(r)
 		book, err := getBookUseCase.GetBookByID(r.Context(), bookID.ToBookID())
-		fail := paramFail.GetDefault(r, false)
+		fail := paramFail.GetDefault(r, 0)
 
-		if fail {
+		if fail == 1 {
+			// error messages are not exposed to the client by default
 			return nil, fmt.Errorf("Some error message that shouldn't be exposed to the client")
+		}
+
+		if fail == 2 {
+			return nil, geh.NewError(
+				http.StatusInternalServerError,
+				errors.New("Some error message that should be exposed to the client"),
+			)
 		}
 
 		if errors.Is(err, useCaseValObj.ErrBookNotFound) {

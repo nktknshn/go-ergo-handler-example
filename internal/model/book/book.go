@@ -11,6 +11,19 @@ var (
 
 type BookID int
 
+func NewBook(title BookTitle, author BookAuthor, description BookDescription) (Book, error) {
+	if err := title.Validate(); err != nil {
+		return Book{}, err
+	}
+	if err := author.Validate(); err != nil {
+		return Book{}, err
+	}
+	if err := description.Validate(); err != nil {
+		return Book{}, err
+	}
+	return Book{Title: title, Author: author, Description: description}, nil
+}
+
 func (b BookID) Validate() error {
 	if b <= 0 {
 		return ErrInvalidBookID
