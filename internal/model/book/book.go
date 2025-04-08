@@ -57,5 +57,5 @@ func (b Book) HasID() bool {
 }
 
 func (b Book) IsZero() bool {
-	return b.ID == 0 && b.Title == "" && b.Author == "" && b.Description == ""
+	return b == Book{}
 }
